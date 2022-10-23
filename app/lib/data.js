@@ -17,15 +17,15 @@ lib.baseDir = path.join(__dirname, '/../.data/');
 // Write data to a file
 lib.create = function(dir, file, data, callback) {
     // Open the file for writing
-    fs.open(lib.baseDir+dir+'/'+file+'.json','wx', function(err, fileDescriptior){
-        if(!err && fileDescriptior) {
+    fs.open(lib.baseDir+dir+'/'+file+'.json','wx', function(err, fileDescriptor){
+        if(!err && fileDescriptor) {
             // Convert data to string
             var stringData = JSON.stringify(data);
 
             // Write to file and close it
-            fs.writeFile(fileDescriptior, stringData, function(err){
+            fs.writeFile(fileDescriptor, stringData, function(err){
                 if(!err) {
-                    fs.close(fileDescriptior, function(err) {
+                    fs.close(fileDescriptor, function(err) {
                         if(!err) {
                             callback(false);
                         } else {
@@ -58,25 +58,23 @@ lib.read = function(dir, file, callback) {
 // Update data inside a file
 lib.update = function(dir, file, data, callback) {
     // Open the file for writing
-    fs.open(lib.baseDir+dir+'/'+file+'.json','r+', function(err, fileDescriptior) {
-        if(!err && fileDescriptior) {
+    fs.open(lib.baseDir+dir+'/'+file+'.json','r+', function(err, fileDescriptor) {
+        if(!err && fileDescriptor) {
             // Convert data to sting
             var stringData = JSON.stringify(data);
 
             // Truncate the file
-            fs.ftruncate(fileDescriptior, function(err) {
+            fs.ftruncate(fileDescriptor, function(err) {
                 if(!err) {
                     // Write to the file and close it
-                    fs.writeFile(fileDescriptior, stringData, function(err) {
+                    fs.writeFile(fileDescriptor, stringData, function(err) {
                         if(!err) {
-                            fs.close(fileDescriptior, function(err) {
-                                fs.close(fileDescriptior, function(err) {
-                                    if(!err) {
-                                        callback(false);
-                                    } else {
-                                        callback('Error closing existing file')
-                                    }
-                                })
+                            fs.close(fileDescriptor, function(err) {
+                               if(!err) {
+                                callback(false);
+                               } else {
+                                callback('Error closing existing file')
+                               }
                             })
                         } else {
                             callback('Error writing to existing file')
