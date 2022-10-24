@@ -25,7 +25,7 @@ helpers.sendTwilioSms('4158375309', 'Hello!', function(err) {
 
 // Instantiate the HTTP server
 server.httpServer = http.createServer(function(req, res) {
-    unifiedServer(req, res)
+    server.unifiedServer(req, res)
 })
 
 // Instantiate the HTTPS server

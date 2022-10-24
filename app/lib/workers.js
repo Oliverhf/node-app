@@ -154,7 +154,36 @@ workers.processCheckOutcome = function(originalCheckData, checkOutcome) {
     // Decide if an alert is warranted
     var alertWarranted = originalCheckData.lastChecked && originalCheckData.state !== state ? true : false;
 
-    
+    // Update the check data
+    var  newCheckData = originalCheckData;
+    newCheckData.state = state;
+    newCheckData.lastChecked = Date.now();
+
+    // Save the updates
+    _data.update('checks', newCheckData.id, newCheckData, function(err) {
+        if(!err) {
+            // Send the new check data to the next phase in the process if needed
+            if(alertWarranted) {
+                workers.alertUserToStatusChange(newCheckData)
+            } else {
+                console.log('Check outcome has not changed, no alert needed')
+            }
+        } else {
+            console.log("Error trying to save updates to one of the checks")
+        }
+    })
+}
+
+// Alert the user as to a change in their check status
+workers.alertUserToStatusChange = function(newCheckData) {
+    var msg = 'Alert: Your check for '+newCheckData.method.toUpperCase()+' '+newCheckData.protocol+'://'+newCheckData.url+' is currently '+newCheckData.state;
+    helpers.sendTwilioSms(newCheckData.userPhone, msg, function(err) {
+        if(!err) {
+            console.log("Success: User was alerted to a status change in their check, via sms: ", msg);
+        } else {
+            console.log("Error: Could not send sms alert to user who had a state change in their check")
+        }
+    })
 }
 
 // Timer to execute the worker-process once per minute
