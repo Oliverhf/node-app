@@ -130,11 +130,11 @@ handlers._users.put = function(data,callback){
   var password = typeof(data.payload.password) == 'string' && data.payload.password.trim().length > 0 ? data.payload.password.trim() : false;
 
   // Error if phone is invalid
-  if(phone){
+  if(phone){      
     // Error if nothing is sent to update
-    if(firstName || lastName || password){
+    if(firstName || lastName || password){    
 
-      // Get token from headers
+      // Get token from headers             
       var token = typeof(data.headers.token) == 'string' ? data.headers.token : false;
 
       // Verify that the given token is valid for the phone number
@@ -184,7 +184,7 @@ handlers._users.delete = function(data,callback){
   // Check that phone number is valid
   var phone = typeof(data.queryStringObject.phone) == 'string' && data.queryStringObject.phone.trim().length == 10 ? data.queryStringObject.phone.trim() : false;
   if(phone){
-
+      
     // Get token from headers
     var token = typeof(data.headers.token) == 'string' ? data.headers.token : false;
 
