@@ -196,7 +196,7 @@ cli.responders.stats = function () {
 };
 
 // List Users
-cli.responders.listUsers = function () {
+cli.responders.listUsers = function() {
   _data.list('users', function(err, userIds){
     if(!err && userIds && userIds.length > 0) {
         cli.verticalSpace();
@@ -216,8 +216,24 @@ cli.responders.listUsers = function () {
 };
 
 // More user info
-cli.responders.moreUserInfo = function (str) {
-  console.log("You asked for more user info", str);
+cli.responders.moreUserInfo = function(str) {
+    // Get the ID from the string
+    var arr = str.split('--');
+    var userId = typeof(arr[1]) == 'string' && arr[1].trim().length > 0 ? arr[1].trim() : false;
+    if(userId) {
+        // Lookup the user
+        _data.read('users', userId, function(err, userData) {
+            if(!err && userData) {
+                // Remove the hashed password
+                delete userData.hashedPassword;
+
+                // Print the JSON with the highlighting
+                cli.verticalSpace();
+                console.dir(userData,{'colors': true});
+                cli.verticalSpace();
+            }
+        })
+    }
 };
 
 // List Checks
