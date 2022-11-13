@@ -381,6 +381,12 @@ handlers.notFound = function(data,callback){
  *
  */
 
+// Example error
+handlers.exampleError = function(data, callback) {
+  var err = new Error('This is an example error');
+  throw(err);
+}
+
 // Users
 handlers.users = function(data,callback){
   var acceptableMethods = ['post','get','put','delete'];
